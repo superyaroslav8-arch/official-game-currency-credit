@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Официальное зачисление игровой валюты</title>
+  <meta name="description" content="Сервис работает только с официально разрешёнными разработчиками способами и API. Без неофициальных методов.">
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #22c55e;
+      --error: #ef4444;
+      --border: #334155;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding: 16px;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding-top: 24px;
+      padding-bottom: 48px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+    select, input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--text);
+      margin-bottom: 20px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .currency-info {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .currency-info.visible {
+      display: block;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: var(--accent-hover);
+    }
+    button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .result.visible {
+      display: block;
+    }
+    .result.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .result.info {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+    .notice {
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(148, 163, 184, 0.1);
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .notice strong {
+      color: var(--text);
+    }
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    @media (min-width: 768px) {
+      .container {
+        padding-top: 48px;
+      }
+      header h1 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Официальное зачисление</h1>
+      <p>Только через разрешённые разработчиками API</p>
+    </header>
+
+    <div class="card">
+      <form id="creditForm">
+        <label for="game">Выберите игру</label>
+        <select id="game" name="game" required>
+          <option value="">— выберите игру —</option>
+          <option value="minecraft">Minecraft</option>
+          <option value="roblox">Roblox</option>
+          <option value="fortnite">Fortnite</option>
+          <option value="genshin">Genshin Impact</option>
+          <option value="valorant">Valorant</option>
+          <option value="cs2">Counter-Strike 2</option>
+          <option value="pubg">PUBG</option>
+          <option value="brawlstars">Brawl Stars</option>
+          <option value="clashroyale">Clash Royale</option>
+          <option value="steam">Steam Wallet</option>
+        </select>
+
+        <div id="currencyInfo" class="currency-info"></div>
+
+        <label for="nickname">Игровой никнейм / ID</label>
+        <input type="text" id="nickname" name="nickname" placeholder="Введите официальный никнейм или ID" required autocomplete="off" maxlength="64">
+
+        <label for="amount">Количество валюты</label>
+        <input type="number" id="amount" name="amount" min="1" max="1000000" placeholder="Например, 1000" required>
+
+        <button type="submit" id="submitBtn">Зачислить</button>
+      </form>
+
+      <div id="result" class="result"></div>
+    </div>
+
+    <div class="notice">
+      <strong>Важно:</strong> Этот сайт использует только официально документированные и разрешённые разработчиками механизмы. 
+      Бесплатное произвольное зачисление виртуальной валюты на любой аккаунт через публичный API в большинстве игр 
+      <strong>не поддерживается</strong> разработчиками. Сайт не запрашивает пароли, токены сессии или другие секретные данные.
+      Никаких имитаций успешного зачисления.
+    </div>
+
+    <footer>
+      Официальные методы только · Нет неофициальных API
+    </footer>
+  </div>
+
+  <script>
+    const games = {
+      minecraft: { name: "Minecraft", currency: "Minecoins / Realms", official: false, note: "Официальное пополнение Minecoins доступно только через Microsoft Store / Xbox / официальные магазины. Публичного API для бесплатного зачисления нет." },
+      roblox: { name: "Roblox", currency: "Robux", official: false, note: "Robux приобретаются только через официальный магазин Roblox. Публичного API для произвольного бесплатного зачисления на любой аккаунт нет." },
+      fortnite: { name: "Fortnite", currency: "V-Bucks", official: false, note: "V-Bucks приобретаются только через Epic Games Store / официальные магазины. Публичного API для бесплатного зачисления нет." },
+      genshin: { name: "Genshin Impact", currency: "Genesis Crystals / Primogems", official: false, note: "Пополнение только через официальные магазины miHoYo / Hoyoverse. Публичного API для произвольного зачисления нет." },
+      valorant: { name: "Valorant", currency: "VP (Valorant Points)", official: false, note: "Пополнение только через официальный клиент Riot Games. Публичного API для бесплатного зачисления нет." },
+      cs2: { name: "Counter-Strike 2", currency: "Steam Wallet / CS:GO items", official: false, note: "Пополнение Steam Wallet только через официальный магазин Steam. Публичного API для бесплатного зачисления средств нет." },
+      pubg: { name: "PUBG", currency: "G-Coins / UC (в зависимости от платформы)", official: false, note: "Пополнение только через официальные магазины. Публичного API для бесплатного зачисления нет." },
+      brawlstars: { name: "Brawl Stars", currency: "Gems / Coins", official: false, note: "Пополнение только через App Store / Google Play / официальные каналы Supercell. Публичного API нет." },
+      clashroyale: { name: "Clash Royale", currency: "Gems / Gold", official: false, note: "Пополнение только через официальные магазины. Публичного API для бесплатного зачисления нет." },
+      steam: { name: "Steam Wallet", currency: "Средства Steam Wallet", official: false, note: "Пополнение Steam Wallet возможно только через официальный сайт Steam с оплатой. Бесплатного публичного API для зачисления средств нет." }
+    };
+
+    const gameSelect = document.getElementById('game');
+    const currencyInfo = document.getElementById('currencyInfo');
+    const form = document.getElementById('creditForm');
+    const result = document.getElementById('result');
+    const submitBtn = document.getElementById('submitBtn');
+
+    gameSelect.addEventListener('change', function() {
+      const key = this.value;
+      if (key && games[key]) {
+        const g = games[key];
+        currencyInfo.innerHTML = `<strong>${g.name}</strong><br>Валюта: ${g.currency}`;
+        currencyInfo.classList.add('visible');
+      } else {
+        currencyInfo.classList.remove('visible');
+      }
+      result.classList.remove('visible');
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const gameKey = gameSelect.value;
+      const nickname = document.getElementById('nickname').value.trim();
+      const amount = document.getElementById('amount').value;
+
+      if (!gameKey || !nickname || !amount) {
+        showResult('error', 'Заполните все поля.');
+        return;
+      }
+
+      const g = games[gameKey];
+      if (!g) {
+        showResult('error', 'Игра не найдена.');
+        return;
+      }
+
+      // Честная проверка: ни одна из популярных игр не предоставляет публичный API 
+      // для произвольного бесплатного зачисления валюты на любой аккаунт.
+      showResult('info', 
+        `Операция недоступна.\n\n` +
+        `Игра: ${g.name}\n` +
+        `Никнейм: ${nickname}\n` +
+        `Количество: ${amount} ${g.currency.split('/')[0].trim()}\n\n` +
+        `${g.note}\n\n` +
+        `Разработчик не предоставляет публичный официальный API, который позволял бы стороннему сайту бесплатно зачислять виртуальную валюту на произвольные аккаунты. ` +
+        `Любые такие операции возможны только внутри официальных магазинов или через защищённые серверные API самого разработчика (с секретными ключами, недоступными публично).`
+      );
+    });
+
+    function showResult(type, message) {
+      result.className = 'result visible ' + type;
+      result.innerText = message;
+    }
+  </script>
+</body>
+</html>
